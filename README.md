@@ -11,7 +11,11 @@ Govm 是一个简单的虚拟机。很适合你学习研究
 ```shell script
 go get -u github.com/pefish/go-vm/bin/govm
 
-govm ./test.vmcode
+govm "
+CONSTQ 'Hello World'
+PRINT 
+halt
+"
 ```
 
 
