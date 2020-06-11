@@ -1,2 +1,6 @@
+github.com/pefish/go-decimal v0.2.2 h1:9ZDBhA5qeKkGdK5b1fZm0WZpctZ6TzEfOzJFAIqOi7w=
+github.com/pefish/go-decimal v0.2.2/go.mod h1:9WQjA0tIud5oB9K4FfUCZEDjbDxXnlpkOMMoGAUaUQQ=
+github.com/pefish/go-reflect v0.2.0 h1:EUB7sDyRdAHkB8SxZcsLgkDgS1X/5yUrNFhNwSbPfBE=
+github.com/pefish/go-reflect v0.2.0/go.mod h1:KTxD5dhPvgUFiL+v2cxvYH/u4qEf7MPI+RouiiMNnRk=
 github.com/pefish/go-test-assert v0.0.1 h1:zWV2Hnn/Rtjf+bEOlyB8qF9ThJb7gmXpRPWEqJtjzjg=
 github.com/pefish/go-test-assert v0.0.1/go.mod h1:kfcsv5ag411u06gdV4iRKU8D0zOglian/DBacnCoQdc=

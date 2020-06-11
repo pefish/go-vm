@@ -3,6 +3,7 @@ package go_vm
 import (
 	"errors"
 	"fmt"
+	"github.com/pefish/go-decimal"
 	"strconv"
 )
 
@@ -119,7 +120,56 @@ func (vm *Vm) Run() error {
 			if err != nil {
 				return err
 			}
-			currentStackFrame.Push(&Value{data: v1 + v2, valueType: ValueType_NUMBER})
+			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).AddForString(v2), 64)
+			if err != nil {
+				return err
+			}
+			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
+		case SUB:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			v2, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).SubForString(v2), 64)
+			if err != nil {
+				return err
+			}
+			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
+		case MUL:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			v2, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).MultiForString(v2), 64)
+			if err != nil {
+				return err
+			}
+			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
+		case DIV:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			v2, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).DivForString(v2), 64)
+			if err != nil {
+				return err
+			}
+			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
 		case CONST:
 			currentStackFrame := vm.stack.GetTopStackFrame()
 			if len(instruction.args) < 1 {

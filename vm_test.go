@@ -2,7 +2,6 @@ package go_vm
 
 import (
 	"fmt"
-	"testing"
 )
 
 func ExampleVm_Run() {
@@ -31,18 +30,21 @@ func ExampleVm_Run() {
 	// haha
 }
 
-func TestNewVmFromText(t *testing.T) {
+func ExampleNewVmFromText() {
 	vm := NewVmFromText(`
 CONST 'Hello World'
 PRINT 
 halt
 `)
-	vm.Run()
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
 	// Output:
 	// Hello World
 }
 
-func TestNewVmFromText1(t *testing.T) {
+func ExampleNewVmFromText1() {
 	vm := NewVmFromText(`
 CONST 1
 CONST 2
@@ -50,12 +52,15 @@ ADD
 PRINT 
 halt
 `)
-	vm.Run()
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
 	// Output:
 	// 3
 }
 
-func TestNewVmFromText2(t *testing.T) {
+func ExampleNewVmFromText2() {
 	vm := NewVmFromText(`
 CONST 1.11
 CONST 2.22
@@ -63,9 +68,60 @@ ADD
 PRINT 
 halt
 `)
-	vm.Run()
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
 	// Output:
 	// 3.33
+}
+
+func ExampleNewVmFromText3() {
+	vm := NewVmFromText(`
+CONST 1.11
+CONST 2.22
+SUB
+PRINT 
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 1.11
+}
+
+func ExampleNewVmFromText4() {
+	vm := NewVmFromText(`
+CONST 1.11
+CONST 2.22
+MUL
+PRINT 
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 2.4642
+}
+
+func ExampleNewVmFromText5() {
+	vm := NewVmFromText(`
+CONST 1.11
+CONST 2.22
+DIV
+PRINT 
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 2
 }
 
 func ExampleDecompileText() {
