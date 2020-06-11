@@ -6,12 +6,12 @@ import (
 )
 
 func ExampleVm_Run() {
-	// CONSTQ "haha"
+	// CONST "haha"
 	// PRINT
 	// HALT
 	vm := NewVm([]*Instruction{
 		{
-			opCode: CONSTQ,
+			opCode: CONST,
 			args: []*Value{
 				&Value{data:"haha", valueType:ValueType_STRING},
 			},
@@ -23,15 +23,17 @@ func ExampleVm_Run() {
 			opCode: HALT,
 		},
 	})
-	vm.Run()
-
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
 	// OUTPUT:
 	// haha
 }
 
 func TestNewVmFromText(t *testing.T) {
 	vm := NewVmFromText(`
-CONSTQ 'Hello World'
+CONST 'Hello World'
 PRINT 
 halt
 `)
@@ -40,16 +42,42 @@ halt
 	// Hello World
 }
 
+func TestNewVmFromText1(t *testing.T) {
+	vm := NewVmFromText(`
+CONST 1
+CONST 2
+ADD
+PRINT 
+halt
+`)
+	vm.Run()
+	// Output:
+	// 3
+}
+
+func TestNewVmFromText2(t *testing.T) {
+	vm := NewVmFromText(`
+CONST 1.11
+CONST 2.22
+ADD
+PRINT 
+halt
+`)
+	vm.Run()
+	// Output:
+	// 3.33
+}
+
 func ExampleDecompileText() {
 	vm := NewVmFromText(`
-CONSTQ "Hello World"
+CONST "Hello World"
 PRINT 
 halt
 `)
 	result, _ := vm.DecompileText()
 	fmt.Println(result)
 	// Output:
-	// CONSTQ "Hello World"
+	// CONST "Hello World"
 	// PRINT
 	// HALT
 }

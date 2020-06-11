@@ -3,8 +3,8 @@ package go_vm
 import (
 	"errors"
 	"fmt"
+	"strconv"
 )
-
 
 type Vm struct {
 	instructions       []*Instruction // 输入的指令集。代码段
@@ -36,13 +36,26 @@ func NewVmFromText(str string) *Vm {
 func GetInstructionsFromTokens(tokens []Token) []*Instruction {
 	instructions := make([]*Instruction, 0)
 	for _, token := range tokens {
-		if token.Type == TokenType_STRING || token.Type == TokenType_INT64 || token.Type == TokenType_FLOAT64 {
+		if token.Type == TokenType_STRING {
 			lastInstruction := instructions[len(instructions)-1]
 			dataType, ok := TokenTypeToDataType[token.Type]
 			if !ok {
 				panic(fmt.Errorf("value type not found - token type: %d", token.Type))
 			}
 			lastInstruction.args = append(lastInstruction.args, &Value{data: token.Literal, valueType: dataType})
+			continue
+		}
+		if token.Type == TokenType_NUMBER {
+			lastInstruction := instructions[len(instructions)-1]
+			dataType, ok := TokenTypeToDataType[token.Type]
+			if !ok {
+				panic(fmt.Errorf("value type not found - token type: %d", token.Type))
+			}
+			float64_, err := strconv.ParseFloat(token.Literal, 64)
+			if err != nil {
+				panic(err)
+			}
+			lastInstruction.args = append(lastInstruction.args, &Value{data: float64_, valueType: dataType})
 			continue
 		}
 		opCode, ok := TokenTypeToOpCode[token.Type]
@@ -92,11 +105,22 @@ func (vm *Vm) stepInstruction() {
 	vm.instructionPointer++
 }
 
-func (vm *Vm) Run() {
+func (vm *Vm) Run() error {
 	for {
 		instruction := vm.fetchInstruction()
 		switch instruction.opCode {
-		case CONSTQ:
+		case ADD:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			v2, err := currentStackFrame.Pop().GetNumber()
+			if err != nil {
+				return err
+			}
+			currentStackFrame.Push(&Value{data: v1 + v2, valueType: ValueType_NUMBER})
+		case CONST:
 			currentStackFrame := vm.stack.GetTopStackFrame()
 			if len(instruction.args) < 1 {
 				panic(fmt.Errorf("instruction error - %v", instruction))
@@ -106,7 +130,7 @@ func (vm *Vm) Run() {
 			currentStackFrame := vm.stack.GetTopStackFrame()
 			fmt.Println(currentStackFrame.Pop().data)
 		case HALT:
-			return
+			return nil
 		}
 		vm.stepInstruction()
 	}

@@ -81,6 +81,12 @@ func (lexer *Lexer) NextToken() Token {
 		token.Type = tokenType
 		token.EndPosition = lexer.currentPosition
 		token.LineNumber = lexer.currentLine
+	} else if isDigit(lexer.currentChar) {
+		token.StartPosition = lexer.currentPosition
+		token.Literal = lexer.readDigit()
+		token.Type = TokenType_NUMBER
+		token.EndPosition = lexer.currentPosition
+		token.LineNumber = lexer.currentLine
 	} else if lexer.currentChar == 0 {
 		token.StartPosition = lexer.currentPosition
 		token.Literal = "EOF"
@@ -115,6 +121,14 @@ func (lexer *Lexer) readString() string {
 	return result
 }
 
+func (lexer *Lexer) readDigit() string {
+	currentPosition := lexer.currentPosition
+	for isDigit(lexer.currentChar) {
+		lexer.readChar()
+	}
+	return lexer.input[currentPosition:lexer.currentPosition]
+}
+
 func (lexer *Lexer) nextChar() byte {
 	if lexer.nextReadPosition >= len(lexer.input) {
 		return 0
@@ -143,5 +157,5 @@ func isLetter(ch byte) bool {
 }
 
 func isDigit(ch byte) bool {
-	return '0' <= ch && ch <= '9'
+	return ('0' <= ch && ch <= '9') || ch == '.'
 }

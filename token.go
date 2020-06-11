@@ -4,18 +4,17 @@ type TokenType int
 
 const (
 	_ TokenType = iota
-	TokenType_CONSTQ
-	TokenType_ADDQ
-	TokenType_SUBQ
-	TokenType_MULQ
-	TokenType_DIVQ
+	TokenType_CONST
+	TokenType_ADD
+	TokenType_SUB
+	TokenType_MUL
+	TokenType_DIV
 	TokenType_JMP
 	TokenType_CALL
 	TokenType_RET
 
-	TokenType_INT64   // int64数值
-	TokenType_STRING  // string
-	TokenType_FLOAT64 // float64数值
+	TokenType_STRING // string
+	TokenType_NUMBER // float64数值
 
 	TokenType_EOL     // 换行
 	TokenType_EOF     // 结束
@@ -34,46 +33,45 @@ type Token struct {
 }
 
 var TokenTypeToOpCode = map[TokenType]OpCode{
-	TokenType_CONSTQ: CONSTQ,
-	TokenType_ADDQ:   ADDQ,
-	TokenType_SUBQ:   SUBQ,
-	TokenType_MULQ:   MULQ,
-	TokenType_DIVQ:   DIVQ,
-	TokenType_JMP:    JMP,
-	TokenType_CALL:   CALL,
-	TokenType_RET:    RET,
-	TokenType_PRINT:  PRINT,
-	TokenType_HALT:   HALT,
+	TokenType_CONST: CONST,
+	TokenType_ADD:   ADD,
+	TokenType_SUB:   SUB,
+	TokenType_MUL:   MUL,
+	TokenType_DIV:   DIV,
+	TokenType_JMP:   JMP,
+	TokenType_CALL:  CALL,
+	TokenType_RET:   RET,
+	TokenType_PRINT: PRINT,
+	TokenType_HALT:  HALT,
 }
 
 var StringToTokenType = map[string]TokenType{
-	"CONSTQ": TokenType_CONSTQ,
-	"ADDQ":   TokenType_ADDQ,
-	"SUBQ":   TokenType_SUBQ,
-	"MULQ":   TokenType_MULQ,
-	"DIVQ":   TokenType_DIVQ,
-	"JMP":    TokenType_JMP,
-	"CALL":   TokenType_CALL,
-	"RET":    TokenType_RET,
-	"PRINT":  TokenType_PRINT,
-	"HALT":   TokenType_HALT,
+	"CONST": TokenType_CONST,
+	"ADD":   TokenType_ADD,
+	"SUB":   TokenType_SUB,
+	"MUL":   TokenType_MUL,
+	"DIV":   TokenType_DIV,
+	"JMP":   TokenType_JMP,
+	"CALL":  TokenType_CALL,
+	"RET":   TokenType_RET,
+	"PRINT": TokenType_PRINT,
+	"HALT":  TokenType_HALT,
 }
 
 var TokenTypeToString = map[TokenType]string{
-	TokenType_CONSTQ: "CONSTQ",
-	TokenType_ADDQ:   "ADDQ",
-	TokenType_SUBQ:   "SUBQ",
-	TokenType_MULQ:   "MULQ",
-	TokenType_DIVQ:   "DIVQ",
-	TokenType_JMP:    "JMP",
-	TokenType_CALL:   "CALL",
-	TokenType_RET:    "RET",
-	TokenType_PRINT:  "PRINT",
-	TokenType_HALT:   "HALT",
+	TokenType_CONST: "CONST",
+	TokenType_ADD:   "ADD",
+	TokenType_SUB:   "SUB",
+	TokenType_MUL:   "MUL",
+	TokenType_DIV:   "DIV",
+	TokenType_JMP:   "JMP",
+	TokenType_CALL:  "CALL",
+	TokenType_RET:   "RET",
+	TokenType_PRINT: "PRINT",
+	TokenType_HALT:  "HALT",
 }
 
 var TokenTypeToDataType = map[TokenType]ValueType{
-	TokenType_INT64:   ValueType_INT64,
-	TokenType_STRING:  ValueType_STRING,
-	TokenType_FLOAT64: ValueType_FLOAT64,
+	TokenType_STRING: ValueType_STRING,
+	TokenType_NUMBER: ValueType_NUMBER,
 }

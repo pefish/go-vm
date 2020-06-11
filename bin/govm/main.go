@@ -11,5 +11,8 @@ func main() {
 		log.Fatal("args error")
 	}
 	vm := go_vm.NewVmFromText(os.Args[1])
-	vm.Run()
+	err := vm.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

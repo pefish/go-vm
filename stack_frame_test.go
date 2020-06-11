@@ -7,7 +7,7 @@ import (
 
 func TestStackFrame_Pop(t *testing.T) {
 	stackFrame := NewStackFrame()
-	stackFrame.Push(&Value{data: 1, valueType: ValueType_INT64})
+	stackFrame.Push(&Value{data: 1, valueType: ValueType_NUMBER})
 	test.Equal(t, 1, stackFrame.Size())
 	result := stackFrame.Pop()
 	test.Equal(t, 1, result.data)
