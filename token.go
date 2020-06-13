@@ -10,6 +10,8 @@ const (
 	TokenType_MUL
 	TokenType_DIV
 	TokenType_JMP
+	TokenType_JEQ
+	TokenType_JNE
 	TokenType_CALL
 	TokenType_RET
 
@@ -39,6 +41,8 @@ var TokenTypeToOpCode = map[TokenType]OpCode{
 	TokenType_MUL:   MUL,
 	TokenType_DIV:   DIV,
 	TokenType_JMP:   JMP,
+	TokenType_JEQ:   JEQ,
+	TokenType_JNE:   JNE,
 	TokenType_CALL:  CALL,
 	TokenType_RET:   RET,
 	TokenType_PRINT: PRINT,
@@ -52,6 +56,8 @@ var StringToTokenType = map[string]TokenType{
 	"MUL":   TokenType_MUL,
 	"DIV":   TokenType_DIV,
 	"JMP":   TokenType_JMP,
+	"JEQ":   TokenType_JEQ,
+	"JNE":   TokenType_JNE,
 	"CALL":  TokenType_CALL,
 	"RET":   TokenType_RET,
 	"PRINT": TokenType_PRINT,
@@ -65,6 +71,8 @@ var TokenTypeToString = map[TokenType]string{
 	TokenType_MUL:   "MUL",
 	TokenType_DIV:   "DIV",
 	TokenType_JMP:   "JMP",
+	TokenType_JEQ:   "JEQ",
+	TokenType_JNE:   "JNE",
 	TokenType_CALL:  "CALL",
 	TokenType_RET:   "RET",
 	TokenType_PRINT: "PRINT",

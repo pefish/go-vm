@@ -124,6 +124,66 @@ halt
 	// 2
 }
 
+func ExampleNewVmFromText6() {
+	vm := NewVmFromText(`
+CONST 3.33
+CONST 3.33
+JNE 6
+CONST "相等"
+PRINT
+halt
+CONST "不相等"
+PRINT
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 相等
+}
+
+func ExampleNewVmFromText7() {
+	vm := NewVmFromText(`
+CONST 3.33
+CONST 3.334
+JNE 6
+CONST "相等"
+PRINT
+halt
+CONST "不相等"
+PRINT
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 不相等
+}
+
+func ExampleNewVmFromText8() {
+	vm := NewVmFromText(`
+CONST "3.33"
+CONST "3.31"
+JNE 6
+CONST "相等"
+PRINT
+halt
+CONST "不相等"
+PRINT
+halt
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 不相等
+}
+
 func ExampleDecompileText() {
 	vm := NewVmFromText(`
 CONST "Hello World"

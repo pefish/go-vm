@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/pefish/go-decimal"
+	"reflect"
 	"strconv"
 )
 
@@ -108,7 +109,11 @@ func (vm *Vm) stepInstruction() {
 
 func (vm *Vm) Run() error {
 	for {
+		//for _, i := range vm.instructions {
+		//	fmt.Println(i.opCode)
+		//}
 		instruction := vm.fetchInstruction()
+		//fmt.Printf("%v\n", instruction.opCode)
 		switch instruction.opCode {
 		case ADD:
 			currentStackFrame := vm.stack.GetTopStackFrame()
@@ -176,6 +181,43 @@ func (vm *Vm) Run() error {
 				panic(fmt.Errorf("instruction error - %v", instruction))
 			}
 			currentStackFrame.Push(instruction.args[0])
+		case JMP:
+			if len(instruction.args) < 1 {
+				panic(fmt.Errorf("instruction error - %v", instruction))
+			}
+			targetPos, err := instruction.args[0].GetNumber()
+			if err != nil {
+				panic(err)
+			}
+			vm.instructionPointer = int64(targetPos) - 1
+		case JNE:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
+			if !reflect.DeepEqual(v1, v2) {
+				if len(instruction.args) < 1 {
+					panic(fmt.Errorf("instruction error - %v", instruction))
+				}
+				targetPos, err := instruction.args[0].GetNumber()
+				if err != nil {
+					panic(err)
+				}
+				vm.instructionPointer = int64(targetPos) - 1
+			}
+		case JEQ:
+			currentStackFrame := vm.stack.GetTopStackFrame()
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
+			if reflect.DeepEqual(v1, v2) {
+				if len(instruction.args) < 1 {
+					panic(fmt.Errorf("instruction error - %v", instruction))
+				}
+				targetPos, err := instruction.args[0].GetNumber()
+				if err != nil {
+					panic(err)
+				}
+				vm.instructionPointer = int64(targetPos) - 1
+			}
 		case PRINT:
 			currentStackFrame := vm.stack.GetTopStackFrame()
 			fmt.Println(currentStackFrame.Pop().data)
