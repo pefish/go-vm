@@ -6,6 +6,8 @@ Govm 是一个简单的虚拟机。很适合你学习研究
 
 作者的编写笔记：https://www.pefish.club/categories/%E5%8A%A8%E6%89%8B%E5%86%99%E8%99%9A%E6%8B%9F%E6%9C%BA/
 
+**注意：不可用于生产，只能用于学习研究，用于生产导致的后果自负**
+
 ## Quick start
 
 ```shell script
