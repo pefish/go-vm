@@ -184,6 +184,25 @@ halt
 	// 不相等
 }
 
+func ExampleNewVmFromText9() {
+	vm := NewVmFromText(`
+CONST "3.33"
+CONST "3.31"
+CALL 5 2
+PRINT
+halt
+
+ADD
+RET 1
+`)
+	err := vm.Run()
+	if err != nil {
+		panic(err)
+	}
+	// Output:
+	// 6.64
+}
+
 func ExampleDecompileText() {
 	vm := NewVmFromText(`
 CONST "Hello World"

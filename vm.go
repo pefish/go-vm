@@ -109,74 +109,44 @@ func (vm *Vm) stepInstruction() {
 
 func (vm *Vm) Run() error {
 	for {
-		//for _, i := range vm.instructions {
-		//	fmt.Println(i.opCode)
-		//}
 		instruction := vm.fetchInstruction()
 		//fmt.Printf("%v\n", instruction.opCode)
+		currentStackFrame := vm.stack.GetTopStackFrame()
+		//fmt.Printf("currentStackFrame: %v\n", currentStackFrame)
 		switch instruction.opCode {
 		case ADD:
-			currentStackFrame := vm.stack.GetTopStackFrame()
-			v1, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
-			v2, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
 			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).AddForString(v2), 64)
 			if err != nil {
 				return err
 			}
 			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
 		case SUB:
-			currentStackFrame := vm.stack.GetTopStackFrame()
-			v1, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
-			v2, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
 			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).SubForString(v2), 64)
 			if err != nil {
 				return err
 			}
 			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
 		case MUL:
-			currentStackFrame := vm.stack.GetTopStackFrame()
-			v1, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
-			v2, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
 			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).MultiForString(v2), 64)
 			if err != nil {
 				return err
 			}
 			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
 		case DIV:
-			currentStackFrame := vm.stack.GetTopStackFrame()
-			v1, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
-			v2, err := currentStackFrame.Pop().GetNumber()
-			if err != nil {
-				return err
-			}
+			v1 := currentStackFrame.Pop().data
+			v2 := currentStackFrame.Pop().data
 			float64_, err := strconv.ParseFloat(go_decimal.Decimal.Start(v1).DivForString(v2), 64)
 			if err != nil {
 				return err
 			}
 			currentStackFrame.Push(&Value{data: float64_, valueType: ValueType_NUMBER})
 		case CONST:
-			currentStackFrame := vm.stack.GetTopStackFrame()
 			if len(instruction.args) < 1 {
 				panic(fmt.Errorf("instruction error - %v", instruction))
 			}
@@ -191,7 +161,6 @@ func (vm *Vm) Run() error {
 			}
 			vm.instructionPointer = int64(targetPos) - 1
 		case JNE:
-			currentStackFrame := vm.stack.GetTopStackFrame()
 			v1 := currentStackFrame.Pop().data
 			v2 := currentStackFrame.Pop().data
 			if !reflect.DeepEqual(v1, v2) {
@@ -205,7 +174,6 @@ func (vm *Vm) Run() error {
 				vm.instructionPointer = int64(targetPos) - 1
 			}
 		case JEQ:
-			currentStackFrame := vm.stack.GetTopStackFrame()
 			v1 := currentStackFrame.Pop().data
 			v2 := currentStackFrame.Pop().data
 			if reflect.DeepEqual(v1, v2) {
@@ -219,8 +187,44 @@ func (vm *Vm) Run() error {
 				vm.instructionPointer = int64(targetPos) - 1
 			}
 		case PRINT:
-			currentStackFrame := vm.stack.GetTopStackFrame()
 			fmt.Println(currentStackFrame.Pop().data)
+		case CALL:
+			if len(instruction.args) < 2 {
+				panic(fmt.Errorf("instruction error - %v", instruction))
+			}
+			targetPos, err := instruction.args[0].GetNumber()  // 取出跳转到的位置
+			if err != nil {
+				return err
+			}
+			argsCount, err := instruction.args[1].GetNumber()  // 取出参数个数
+			if err != nil {
+				return err
+			}
+			newStackFrame := NewStackFrame()  // 新建一个栈帧
+			for argsCount > 0 {
+				newStackFrame.Push(currentStackFrame.Pop())  // 参数移动过来
+				argsCount--
+			}
+			vm.stack.Push(newStackFrame)  // 放入栈帧
+
+			currentStackFrame.retAddress = vm.instructionPointer  // 记录返回地址
+			vm.instructionPointer = int64(targetPos) - 1  // jmp
+		case RET:
+			if len(instruction.args) < 1 {
+				panic(fmt.Errorf("instruction error - %v", instruction))
+			}
+			returnCount, err := instruction.args[0].GetNumber()
+			if err != nil {
+				return err
+			}
+			lastStackFrame := vm.stack.GetLastStackFrame()
+			for returnCount > 0 {
+				lastStackFrame.Push(currentStackFrame.Pop())
+				returnCount--
+			}
+			vm.stack.Pop()
+
+			vm.instructionPointer = lastStackFrame.retAddress
 		case HALT:
 			return nil
 		}

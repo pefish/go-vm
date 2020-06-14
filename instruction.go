@@ -22,8 +22,8 @@ const (
 	JMP          // JMP 6  跳到6的位置执行指令
 	JEQ          // 相等跳转
 	JNE          // 不相等跳转
-	CALL         // CALL 6 2  跳到6位置执行，pop出2个参数。返回值入栈，返回值个数入栈
-	RET          // RET  跳转到返回地址执行
+	CALL         // CALL 6 2  跳到6位置执行，上一个栈帧中pop出2个参数放到新栈帧。返回值入栈，返回值个数入栈
+	RET          // RET 2  跳转到返回地址执行，2表示返回两个参数
 	// 下面是预设函数
 	PRINT // PRINT(d interface{}) 打印参数
 	HALT  // HALT() 退出进程

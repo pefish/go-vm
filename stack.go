@@ -23,6 +23,12 @@ func (s *Stack) Pop() *StackFrame {
 	return stackFrame
 }
 
+// 获取当前栈帧
 func (s *Stack) GetTopStackFrame() *StackFrame {
 	return s.stackFrames[len(s.stackFrames) - 1]
+}
+
+// 获取上一个栈帧
+func (s *Stack) GetLastStackFrame() *StackFrame {
+	return s.stackFrames[len(s.stackFrames) - 2]
 }

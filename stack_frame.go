@@ -1,17 +1,26 @@
 package go_vm
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type StackFrame struct {
 	values     []*Value // 存放栈帧中所有数据
-	args       []*Value // 存放调用参数
-	retAddress int           // 存放返回地址
+	retAddress int64    // 存放返回地址
+}
+
+func (s StackFrame) String() string {
+	valuesStr := ""
+	for _, value := range s.values {
+		valuesStr += fmt.Sprintf("%s", value) + "; "
+	}
+	return fmt.Sprintf("values: <%s>, retAddress: <%d>", valuesStr, s.retAddress)
 }
 
 func NewStackFrame() *StackFrame {
 	return &StackFrame{
 		values: make([]*Value, 0),
-		args: make([]*Value, 0),
 	}
 }
 
@@ -37,5 +46,5 @@ func (s *StackFrame) Push(value *Value) {
 
 // 获取栈帧顶部的值
 func (s *StackFrame) GetTopValue() *Value {
-	return s.values[len(s.values) - 1]
+	return s.values[len(s.values)-1]
 }
